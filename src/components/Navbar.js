@@ -6,6 +6,7 @@ export default function Navbar() {
   const {isAuth, setIsAuth, isAdmin, setIsAdmin} = useContext(AuthContext);
   const logout = () => {
     setIsAuth(false);
+    setIsAdmin(false);
     localStorage.removeItem('auth');
   }
   return (
