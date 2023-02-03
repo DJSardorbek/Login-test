@@ -37,11 +37,11 @@ function App() {
           
         : (
           <Routes>
-            <Route path='/login' element={<Login/>} exact={true}/>
+            <Route path='/' element={<Login/>} exact={true}/>
             {/* redirect to login */}
             <Route 
                 path="*"
-                element={<Navigate to="/login" replace />}/>
+                element={<Navigate to="/" replace />}/>
           </Routes>
         )
         }
