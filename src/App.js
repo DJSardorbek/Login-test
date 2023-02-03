@@ -6,11 +6,13 @@ import Contact from "./components/Contact";
 import { AuthContext } from './context';
 import About from './components/About';
 import Login from './components/Login/Login';
-import MainPage from './components/MainPage';
+import Admin from "./components/Admin";
+import User from "./components/User";
 
 
 function App() {
   const [isAuth, setIsAuth] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if(localStorage.getItem('auth')) {
@@ -18,20 +20,37 @@ function App() {
     }
   }, [])
   return (
-    <AuthContext.Provider value={{isAuth, setIsAuth}}>
+    <AuthContext.Provider value={{isAuth, setIsAuth, isAdmin, setIsAdmin}}>
       <div className='app'>
       <BrowserRouter>
       <Navbar/>
       {isAuth
         ? (
           <Routes>
-            <Route path='/home' element={<MainPage/>} exact={true}/>
-            <Route path='/contact' element={<Contact/>} exact={true}/>
-            <Route path='/about' element={<About/>} exact={true}/>
-            {/* redirect to home */}
-            <Route 
-                path="*"
-                element={<Navigate to="/home" replace />}/>
+            {isAdmin
+            ?
+              (
+                <>
+                <Route path='/admin/home' element={<Admin/>} exact={true}/>
+                <Route path='/admin/contact' element={<Contact/>} exact={true}/>
+                <Route path='/admin/about' element={<About/>} exact={true}/>
+                {/* redirect to home */}
+                <Route 
+                  path="*"
+                  element={<Navigate to="/admin/home" replace />}/>
+                </>
+              )
+            : (
+              <>
+                <Route path='/user/home' element={<User/>} exact={true}/>
+                <Route path='/user/about' element={<About/>} exact={true}/>
+                {/* redirect to home */}
+                <Route 
+                  path="*"
+                  element={<Navigate to="/user/home" replace />}/>
+              </>
+              )
+            }
           </Routes>
         )
           
