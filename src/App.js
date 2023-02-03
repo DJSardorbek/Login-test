@@ -1,24 +1,54 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
+import Navbar from './components/Navbar';
+import Contact from "./components/Contact";
+import { AuthContext } from './context';
+import About from './components/About';
+import Login from './components/Login/Login';
+import MainPage from './components/MainPage';
+
 
 function App() {
+  const [isAuth, setIsAuth] = useState(false);
+
+  useEffect(() => {
+    if(localStorage.getItem('auth')) {
+      setIsAuth(true);
+    }
+  }, [])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthContext.Provider value={{isAuth, setIsAuth}}>
+      <div className='app'>
+      <BrowserRouter>
+      <Navbar/>
+      {isAuth
+        ? (
+          <Routes>
+            <Route path='/home' element={<MainPage/>} exact={true}/>
+            <Route path='/contact' element={<Contact/>} exact={true}/>
+            <Route path='/about' element={<About/>} exact={true}/>
+            {/* redirect to home */}
+            <Route 
+                path="*"
+                element={<Navigate to="/home" replace />}/>
+          </Routes>
+        )
+          
+        : (
+          <Routes>
+            <Route path='/login' element={<Login/>} exact={true}/>
+            {/* redirect to login */}
+            <Route 
+                path="*"
+                element={<Navigate to="/login" replace />}/>
+          </Routes>
+        )
+        }
+      </BrowserRouter>
+      </div>
+      
+    </AuthContext.Provider>
   );
 }
 
